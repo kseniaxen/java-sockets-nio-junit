@@ -62,11 +62,14 @@ public class TestSocketClient {
         
         //Очищаем буфер, чтобы строка отправилась
         bufferedWriter.flush();
-        outputStreamWriter.write("end");
+        outputStreamWriter.write("end\n");
+        bufferedWriter.flush();
+        outputStreamWriter.write("hello");
         bufferedWriter.flush();
         } catch (IOException ex) {
             Logger.getLogger(TestSocketClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         //Закоываем поток
         try {
             outputStreamWriter.close();
@@ -79,6 +82,7 @@ public class TestSocketClient {
         } catch (IOException ex) {
             Logger.getLogger(TestSocketClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
     
 }

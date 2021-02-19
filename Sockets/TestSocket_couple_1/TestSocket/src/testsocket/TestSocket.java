@@ -42,6 +42,7 @@ public class TestSocket {
         BufferedReader bufferedReader = null;
         //Строка для сохранения данных от клиента
         String resultLineString = null;
+
         //Запускаем серверный сокет на прослушивание
         try {
             serverSocket = new ServerSocket(3000);
@@ -54,48 +55,51 @@ public class TestSocket {
         } catch (IOException ex) {
             Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //Инициализируем поток ввода
-        try {
-            inputStream = acceptSocket.getInputStream();
-        } catch (IOException ex) {
-            Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //Инициализируем поток вывода (в примере не используется)
-        try {
-            outputStream = acceptSocket.getOutputStream();
-        } catch (IOException ex) {
-            Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //Инициализируем буфферизированный поток ввода
-        try {
+        while(!acceptSocket.isClosed()) {
+            //Инициализируем поток ввода
+            try {
+                inputStream = acceptSocket.getInputStream();
+            } catch (IOException ex) {
+                Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //Инициализируем поток вывода (в примере не используется)
+            try {
+                outputStream = acceptSocket.getOutputStream();
+            } catch (IOException ex) {
+                Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //Инициализируем буфферизированный поток ввода
+            try {
             /*try {
             objectInputStream = new ObjectInputStream(inputStream);
             } catch (IOException ex) {
             Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
-            }*/            
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "utf8"));
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //запускаем бесконечный цикл
-        for (int i = 0; i > -1; i++) {
-            //На каждой итерации читаем из буфферизированного потока ввода строку 
-            try {
-                resultLineString = bufferedReader.readLine();
-                System.out.println(i + ": " + resultLineString);
-                if (resultLineString.equals("end")) {
-                    break;
-                }
-            } catch (IOException ex) {
+            }*/
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "utf8"));
+            } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
             }
+            //запускаем бесконечный цикл
+            for (int i = 0; i > -1; i++) {
+                //На каждой итерации читаем из буфферизированного потока ввода строку
+                try {
+                    resultLineString = bufferedReader.readLine();
+                    System.out.println(i + ": " + resultLineString);
+                    if (resultLineString.equals("end")) {
+                        break;
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
-        
+
         try {
             acceptSocket.close();
         } catch (IOException ex) {
             Logger.getLogger(TestSocket.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         
         try {
             System.in.read();
